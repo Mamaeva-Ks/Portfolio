@@ -4,7 +4,7 @@
 
 |Название папки|Почему стоит посмотреть|Описание|Стеки|
 |:--:| :------------:|----------|------|
-| [Медцентр](https://github.com/Mamaeva-Ks/Portfolio/tree/main/Medcenter) | много интересных грфиков | Анализ изменение выручки медицинского центра и выявление ключевых факторов, повлиявшие на это изменение | matplotlib, seaborn plotly, datetime, io, requests |
+| [Медцентр](https://github.com/Mamaeva-Ks/Portfolio/tree/main/Medcenter) | много интересных грaфиков | Анализ изменение выручки медицинского центра и выявление ключевых факторов, повлиявшие на это изменение | matplotlib, seaborn plotly, datetime, io, requests |
 |[Телекомм](https://github.com/Mamaeva-Ks/Portfolio/tree/main/Telecomm) | дашборды Tableau | Исследование данных с результатами опроса, отражающего текущий уровень потребительской лояльности (NPS) клиентов телекоммуникационной компании | pandas, sqlalchemy, tableau|
 |[Банк](https://github.com/Mamaeva-Ks/Portfolio/tree/main/%D0%91%D0%B0%D0%BD%D0%BA)| презентация очень интересная| Исследование увеличенния оттока клиентов банка| pyton, pandas matplotlib, seaborn plotly, statistics
 |[Библиотека](https://github.com/Mamaeva-Ks/Portfolio/tree/main/%D0%91%D0%B8%D0%B1%D0%BB%D0%B8%D0%BE%D1%82%D0%B5%D0%BA%D0%B0) | SQL в Pyton| Анализ базы данный он-лайн библиотеки для формированния ценностного предложение для нового продукта|SQL, pyton
