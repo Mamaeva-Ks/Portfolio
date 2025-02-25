@@ -4,7 +4,7 @@
 
 | № |Название папки|Почему стоит посмотреть|Описание|Стеки|
 |:--:|:--:| :------------:|----------|------|
-|1|[Marketing](https://github.com/Mamaeva-Ks/Portfolio/tree/main/Marketing)|Когортный анализ, конверсия, удержание, ROI, CAC, LTV | Маркетинговый анализ приложения.  Выяснение причин падения прибыли и рекомендации по их исправлению|pandas, matplotlib, plotly, seaborn|
+|1|[Marketing](https://github.com/Mamaeva-Ks/Portfolio/tree/main/1.%20Marketing)|Когортный анализ, конверсия, удержание, ROI, CAC, LTV | Маркетинговый анализ приложения.  Выяснение причин падения прибыли и рекомендации по их исправлению|pandas, matplotlib, plotly, seaborn|
 |2|[Медцентр](https://github.com/Mamaeva-Ks/Portfolio/tree/main/Medcenter) | много интересных грaфиков | Анализ изменение выручки медицинского центра и выявление ключевых факторов, повлиявшие на это изменение | matplotlib, seaborn plotly, datetime, io, requests |
 |3|[Конференция ТЕD](TED)|Дашборды Табло|Дашборды посвещенные истории международной конференции TED |[Интерактивные дашборды на сайте Табло](https://public.tableau.com/shared/C25B8ZGJ8?:display_count=n&:origin=viz_share_link) /только с ВПН /
 |4|[Телекомм](https://github.com/Mamaeva-Ks/Portfolio/tree/main/Telecomm) | дашборды Tableau | Исследование данных с результатами опроса, отражающего текущий уровень потребительской лояльности (NPS) клиентов телекоммуникационной компании | pandas, sqlalchemy, tableau|
