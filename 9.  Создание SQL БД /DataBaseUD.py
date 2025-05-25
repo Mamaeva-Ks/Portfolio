@@ -6,7 +6,6 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column,
 from sqlalchemy import create_engine, DateTime, String, Float, Integer, func, ForeignKey, insert, select, text
 from sqlalchemy.dialects.postgresql import UUID as UUIDType
 from uuid import UUID, uuid4
-from typing import List
 from datetime import datetime
 
 
@@ -18,7 +17,7 @@ dir_path: str = "data/downloads/"
 # Функция по разбору файла на части(убрана)
 def load(year: int, month: int, day: int, agency: str, project: str, solution: str, content: str) -> str:
     """
-    Download products from the IGN [1] FTP server by a specification.
+    Загрузка данных с FTP-сервера
 
     Parameters
     ----------
