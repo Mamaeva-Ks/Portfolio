@@ -1,10 +1,3 @@
-import ftplib
-import gzip
-import os
-import re
-import requests
-import scipy as sp
-
 import sqlite3 as sl
 import sqlalchemy as sa
 import pandas as pd
@@ -15,8 +8,6 @@ from sqlalchemy.dialects.postgresql import UUID as UUIDType
 from uuid import UUID, uuid4
 from typing import List
 from datetime import datetime
-
-import sensors
 
 
 
@@ -51,77 +42,7 @@ def load(year: int, month: int, day: int, agency: str, project: str, solution: s
     -------
     path:
         A local path to the downloaded file.
-
-    References
-    ----------
-    [1] Institut National de l'Information Géographique et Forestière (IGN) https://www.ign.fr/
-    """
-
-    # Get the time components.
-    t = sensors.Time.from_ymdhms(year, month, day, 0, 0, 0.0)
-    _, day_of_year, _ = t.yds
-    week = (t - sensors.Time.GPS_EPOCH) // sensors.Duration.WEEK
-
-    # Construct a pattern to search.
-    version = "[0-9]"
-    hour = "[0-9]{2}"
-    minute = "[0-9]{2}"
-    length = "[0-9]{2}[SMHDWLY]"
-    sampling = "[0-9]{2}[SMHDWLY]"
-    format_ = "\\S+"
-    pattern = re.compile(f"{agency}{version}{project}{solution}_" +
-                         f"{year:04d}{day_of_year:02d}{hour}{minute}_" +
-                         f"{length}_" +
-                         f"{sampling}_" +
-                         f"{content}." +
-                         f"{format_}")
-
-    # Create a directory for downloaded files.
-    os.makedirs(dir_path, exist_ok=True)
-
-    # Iterate over the existing files in the directory.
-    for filename in os.listdir(dir_path):
-        # Search the filename matched to the template.
-        match = pattern.match(filename)
-        if match is not None:
-            return dir_path + filename
-
-    # Connect to the FTP server.
-    with ftplib.FTP("igs.ign.fr") as ftp:
-        ftp.login("", "")
-
-        # Go to the actual directory.
-        ftp.cwd("pub/igs/products")
-        if project == "MGX":
-            ftp.cwd("mgex/")
-        ftp.cwd(f"{week:04d}/")
-
-        # Iterate over the files in the directory.
-        for zip_filename in ftp.nlst():
-            # Search the filename matched to the template.
-            match = pattern.match(zip_filename)
-            if match is not None:
-                # Download the file.
-                with open(zip_filename, "wb") as zip_file:
-                    ftp.retrbinary("RETR " + zip_filename, zip_file.write)
-
-                # Construct the path to the file.
-                nameparts = zip_filename.split(".")
-                path = dir_path + nameparts[0] + "." + nameparts[1]
-
-                # Unzip the file.
-                os.makedirs(dir_path, exist_ok=True)
-                with gzip.open(zip_filename, "rb") as zip_file:
-                    with open(path, "wb") as bin_file:
-                        bin_file.write(zip_file.read())
-
-                # Delete the archived file.
-                os.remove(zip_filename)
-
-                return path
-        else:
-            raise RuntimeError("cannot find file")
-
+   
 """
 Prepare for testing.
 """
@@ -131,20 +52,10 @@ year = 2024
 month = 11
 day = 1
 
-# Download the last ANTEX file.
-# path = load_antex()
 
-# Read the ANTEX file.
-# atx_data = sensors.gnss.ANTEXData().read(path)
-
-# Download an SP3 file.
-sp3_path = load(year, month, day, "COD", "MGX", "FIN", "ORB")
-
-# Download an ORBEX file.
-obx_path = load(year, month, day, "COD", "MGX", "FIN", "ATT")
 
 """
-Test the SP3 processing tools.
+Date Base
 """
 
 
@@ -259,6 +170,18 @@ class Systems(Base, UniqueMixin):
         return query.filter(Systems.name == name)
 
 
+#Create Date Base
+Base.metadata.create_all(engine)
+
+path_to_db = 'D:/DateBaseSatellates.db'
+
+if path_to_db:
+    engine = create_engine(f'sqlite+pysqlite:///{path_to_db}', echo=False)
+    connection = sl.connect('{path_to_db}')
+
+Session = sessionmaker(bind=engine)
+session = Session()
+
 
 # Read the SP3 file.
 sp3_data = sensors.gnss.read_sp3(sp3_path)
@@ -285,21 +208,7 @@ for epc_data in sp3_data.epochs:
                 y = rec_data.y
                 z = rec_data.z
 
-                #print(sys.name, prn, x, y, z, cur_date)
-
-
-                path_to_db = 'D:/Проекты/hpc_engine/DateBaseSatellates.db'
-
-                if path_to_db:
-                    engine = create_engine(f'sqlite+pysqlite:///{path_to_db}', echo=False)
-                    connection = sl.connect('{path_to_db}')
-
-                Session = sessionmaker(bind=engine)
-                session = Session()
-
-                # Base.metadata.create_all(engine)
-
-
+                                
                 # test
                 _prn = prn
                 _agency = agency
