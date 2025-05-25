@@ -11,11 +11,11 @@ from datetime import datetime
 
 
 
-# Path to downloaded files.
+# Путь к файлу.
 dir_path: str = "data/downloads/"
 
 
-
+# Функция по разбору файла на части(убрана)
 def load(year: int, month: int, day: int, agency: str, project: str, solution: str, content: str) -> str:
     """
     Download products from the IGN [1] FTP server by a specification.
@@ -44,7 +44,7 @@ def load(year: int, month: int, day: int, agency: str, project: str, solution: s
         A local path to the downloaded file.
    
 """
-Prepare for testing.
+Данные для теста.
 """
 
 # Select a date.
@@ -55,7 +55,8 @@ day = 1
 
 
 """
-Date Base
+Создание Базы данных
+используются классы
 """
 
 
@@ -173,6 +174,7 @@ class Systems(Base, UniqueMixin):
 #Create Date Base
 Base.metadata.create_all(engine)
 
+# Наполнение БД собранными данными
 path_to_db = 'D:/DateBaseSatellates.db'
 
 if path_to_db:
@@ -183,39 +185,37 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 
-# Read the SP3 file.
+# Читаем файл
 sp3_data = sensors.gnss.read_sp3(sp3_path)
 
-# Get the agency creating the file.
+# Получаем агенство
 agency = sp3_data.agency
 
-# Iterate over the epochs.
+# Итерация по эпохам
 for epc_data in sp3_data.epochs:
-    # Get the date and time.
+    # Получаем дату и время
     year, month, day, hour, minute, second = epc_data.t.ymdhms
     cur_date = epc_data.t
 
 
 
-    # Iterate over the satellites.
+    # Итерация по спутниками
     for (sys, prn), sat_data in epc_data.satellites.items():
-        # Iterate over the records.
+        # Итерация по записям
         for rec_data in sat_data.records:
-            # If this is a position and clock record.
+            # Если есть запись по этой дате
             if isinstance(rec_data, sat_data.PositionAndClock):
-                # Get the satellite's coordinates.
+                # Получить координаты спутника
                 x = rec_data.x
                 y = rec_data.y
                 z = rec_data.z
 
                                 
-                # test
+                # запись
                 _prn = prn
                 _agency = agency
                 _system = sys.name
                 _epoch = datetime(year, month, day, hour, minute)
-
-
                 _x = x
                 _y = y
                 _z = z
@@ -246,12 +246,8 @@ for epc_data in sp3_data.epochs:
 
 
 
+""" Запросы в БД с выводами в ДатаФрейм """
 
-                # Put to the database the next values: agency, year, month, day, hour, minute, second, sys, prn,
-                # x, y, z.
-
-""" Запросы в БД """
-# вывод в Датафрейм
 query = """
 SELECT ag.name as agency, epoch, sys.name as system, prn, x, y, z
 FROM satellate as sat
@@ -263,7 +259,7 @@ satell = pd.read_sql(query, engine)
 #satell.set_index('id', inplace=True)
 satell
 
-#вывод result
+# и с выводом объекта result
 with session:
     result = session.execute(text("SELECT * FROM agency"))
     for row in result:
